@@ -22,6 +22,13 @@ def delete_expense(args):
     except ValueError:
         print("Error: Expense ID must be an integer.")
 
+def edit_expense(args):
+    """Handles the 'edit' command: updates the amount of an existing expense by ID."""
+    data_manager.update_expense_amount_in_data(
+        expense_id=int(args.id),
+        new_amount=args.new_amount
+    )
+
 def main():
     """Main function to parse arguments and run the CLI application."""
     parser = argparse.ArgumentParser(
@@ -44,6 +51,12 @@ def main():
     parser_delete = subparsers.add_parser("delete", help="Delete an expense by ID.")
     parser_delete.add_argument("id", type=str, help="The ID of the expense to delete.")
     parser_delete.set_defaults(func=delete_expense)
+
+    # New Edit command
+    parser_edit = subparsers.add_parser("edit", help="Update the amount of an existing expense by ID.")
+    parser_edit.add_argument("id", type=str, help="The ID of the expense to edit.")
+    parser_edit.add_argument("amount", type=float, help="The new monetary amount.")
+    parser_edit.set_defaults(func=edit_expense)
 
     args = parser.parse_args()
     args.func(args)
